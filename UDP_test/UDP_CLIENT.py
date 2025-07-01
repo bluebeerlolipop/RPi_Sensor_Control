@@ -9,6 +9,7 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 message = "UDP test"
 for i in range(10):
     client_socket.sendto(message.encode("UTF-8"), (ip, port))
+    print("%d번째 전송", i+1)
     time.sleep(1)
 
 client_socket.close()
