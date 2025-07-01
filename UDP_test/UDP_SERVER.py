@@ -8,4 +8,7 @@ server_socket.bind((ip,port))
 print('WAITING FOR CLIENT...')
 data, address = server_socket.recvfrom(1024)
 print('CLIENT ip address:', address[0])
-print(data.decode("UTF-8"))
+while True:
+    data, address = server_socket.recvfrom(1024)
+    print("CLIENT ip address: ", address[0])
+    print("message from client: ",data.decode("UTF-8"))
