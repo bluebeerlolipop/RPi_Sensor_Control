@@ -34,6 +34,10 @@ def init_bno055():
 
 init_bno055()
 
+with open("imu_data_log.txt", "w") as f:
+    f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
+
+
 while True:
     accel = [x/100.0 for x in read_vector(0x08)]  # m/s^2
     mag   = [x/16.0 for x in read_vector(0x0E)]   # uT
@@ -43,6 +47,15 @@ while True:
     gravity = [x/100.0 for x in read_vector(0x2E)] # m/s^2
     quat  = read_quaternion()
 
+    line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+            time.time(),
+            *accel, *mag, *gyro, *euler, *lin_acc, *gravity, *quat
+        )
+
+    f.write(line)
+    f.flush()  # 즉시 디스크에 기록
+    time.sleep(0.06)
+
     print(f"Accel     : {accel} m/s^2")
     print(f"Magnet    : {mag} uT")
     print(f"Gyro      : {gyro} deg/s")
@@ -51,4 +64,4 @@ while True:
     print(f"Gravity   : {gravity} m/s^2")
     print(f"Quaternion: {quat}")
     print("-" * 50)
-    time.sleep(0.5)
+    time.sleep(0.06)
