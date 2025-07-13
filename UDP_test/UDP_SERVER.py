@@ -1,6 +1,6 @@
 import socket
 
-ip ='192.168.137.1'
+ip ='192.168.0.9'
 port = 22
 
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
