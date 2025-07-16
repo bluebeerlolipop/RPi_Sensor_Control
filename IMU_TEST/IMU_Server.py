@@ -11,12 +11,13 @@ print("CLIENT ip address: ", address[0])
 
 while True:
     data, address = server_socket.recvfrom(1024)
+    message = data.decode("UTF-8")
 
-    if data == "exit":
+    if message == "exit":
         print("EXIT DEPLOYED. SERVER SHUTDOWN")
         break
 
-    message = data.decode("UTF-8")
+    #message = data.decode("UTF-8")
     message = message.strip()
     message = message.split(',')
 
@@ -36,5 +37,11 @@ while True:
     print(f"Gravity   : {gravity} m/s^2")
     print(f"Quaternion: {quat}")
     print("-" * 50)
+
+    if KeyboardInterrupt:
+        print("KeyboardInterrupt: Exiting gracefully...")
+        message = "exit"
+        server_socket.sendto(message.encode("UTF-8"), (ip, port))
+        break
 
 server_socket.close()

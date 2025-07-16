@@ -94,10 +94,11 @@ try:
         print("-" * 50)
         time.sleep(0.06)
 
-except KeyboardInterrupt:
-    print("KeyboardInterrupt: Exiting gracefully...")
-    message = "exit"
-    client_socket.sendto(message.encode("UTF-8"), (ip, port))  #
+        data, address = client_socket.recvfrom(1024)
+        message = data.decode("UTF-8")
+        if message == "exit":
+            print("EXIT DEPLOYED. CLIENT SHUTDOWN")
+            break
 finally:
     f.close()
     client_socket.close()
