@@ -64,7 +64,7 @@ f = open("imu_data_log.txt", "w")
 f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
 start_time = time.time()
 
-client_socket.settimeout(0.02)  # 타임아웃 설정
+#client_socket.settimeout(0.02)  # 타임아웃 설정
 
 try:
     while True:
@@ -96,6 +96,7 @@ try:
         print("-" * 50)
         time.sleep(0.04)
         
+        client_socket.settimeout(0.02)
         try:
             data, address = client_socket.recvfrom(1024)
             message = data.decode("UTF-8")

@@ -1,4 +1,5 @@
 import socket
+import time
 
 ip ='192.168.137.1'
 port = 22
@@ -42,7 +43,9 @@ try:
 except KeyboardInterrupt:
     print("KeyboardInterrupt: Exiting gracefully...")
     message = "exit"
-    server_socket.sendto(message.encode("UTF-8"), (ip, port))
+    for i in range(100):
+        server_socket.sendto(message.encode("UTF-8"), (ip, port))
+        time.sleep(0.1)
 
 finally:
     server_socket.close()
