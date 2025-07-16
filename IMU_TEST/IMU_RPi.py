@@ -64,6 +64,8 @@ f = open("imu_data_log.txt", "w")
 f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
 start_time = time.time()
 
+client_socket.settimeout(0.02)  # 타임아웃 설정
+
 try:
     while True:
         accel = [x/100.0 for x in read_vector(0x08)]  # m/s^2
@@ -92,13 +94,16 @@ try:
         print(f"Gravity   : {gravity} m/s^2")
         print(f"Quaternion: {quat}")
         print("-" * 50)
-        time.sleep(0.06)
-
-        data, address = client_socket.recvfrom(1024)
-        message = data.decode("UTF-8")
-        if message == "exit":
-            print("EXIT DEPLOYED. CLIENT SHUTDOWN")
-            break
+        time.sleep(0.04)
+        
+        try:
+            data, address = client_socket.recvfrom(1024)
+            message = data.decode("UTF-8")
+            if message == "exit":
+                print("EXIT DEPLOYED. CLIENT SHUTDOWN")
+                break
+        except socket.timemout:
+            pass
 finally:
     f.close()
     client_socket.close()
