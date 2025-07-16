@@ -72,9 +72,10 @@ try:
         lin_acc = [x/100.0 for x in read_vector(0x28)] # m/s^2
         gravity = [x/100.0 for x in read_vector(0x2E)] # m/s^2
         quat  = read_quaternion()
-
+        
+        time = time.time()
         line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
-                time.time(),
+                time.time():.4f - time,
                 *accel, *mag, *gyro, *euler, *lin_acc, *gravity, *quat
             )
         
