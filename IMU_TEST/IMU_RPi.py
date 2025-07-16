@@ -73,7 +73,7 @@ try:
         gravity = [x/100.0 for x in read_vector(0x2E)] # m/s^2
         quat  = read_quaternion()
 
-        line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+        line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
                 time.time(),
                 *accel, *mag, *gyro, *euler, *lin_acc, *gravity, *quat
             )

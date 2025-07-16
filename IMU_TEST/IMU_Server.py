@@ -12,7 +12,7 @@ print("CLIENT ip address: ", address[0])
 while True:
     data, address = server_socket.recvfrom(1024)
 
-    if message == "exit":
+    if data == "exit":
         print("EXIT DEPLOYED. SERVER SHUTDOWN")
         break
 
@@ -20,13 +20,13 @@ while True:
     message = message.strip()
     message = message.split(',')
 
-    accel = [float(message[0]), float(message[1]), float(message[2])]
-    mag = [float(message[3]), float(message[4]), float(message[5])]
-    gyro = [float(message[6]), float(message[7]), float(message[8])]
-    euler = [float(message[9]), float(message[10]), float(message[11])]
-    lin_acc = [float(message[12]), float(message[13]), float(message[14])]
-    gravity = [float(message[15]), float(message[16]), float(message[17])]
-    quat = [float(message[18]), float(message[19]), float(message[20]), float(message[21])]
+    accel = [float(message[1]), float(message[2]), float(message[3])]
+    mag = [float(message[4]), float(message[5]), float(message[6])]
+    gyro = [float(message[7]), float(message[8]), float(message[9])]
+    euler = [float(message[10]), float(message[11]), float(message[12])]
+    lin_acc = [float(message[13]), float(message[14]), float(message[15])]
+    gravity = [float(message[16]), float(message[17]), float(message[18])]
+    quat = [float(message[19]), float(message[20]), float(message[21]), float(message[22])]
 
     print(f"Accel     : {accel} m/s^2")
     print(f"Magnet    : {mag} uT")
