@@ -2,7 +2,6 @@ import smbus2
 import time
 import struct
 import socket
-import keyboard
 
 ip = '192.168.137.1' # server의 ip를 입력해야함. client에 할당된 ip를 적으면 안됨.
 port = 22 # port번호는 수정 가능
@@ -61,10 +60,10 @@ def wait_for_full_calibration():
 init_bno055()
 wait_for_full_calibration()
 
-with open("imu_data_log.txt", "w") as f:
-    f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
+f = open("imu_data_log.txt", "w")
+f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
 
-
+try:
     while True:
         accel = [x/100.0 for x in read_vector(0x08)]  # m/s^2
         mag   = [x/16.0 for x in read_vector(0x0E)]   # uT
@@ -94,11 +93,11 @@ with open("imu_data_log.txt", "w") as f:
         print("-" * 50)
         time.sleep(0.06)
 
-        if keyboard.is_pressed("q"):
-            print("종료합니다...")
-            message = "exit"
-            client_socket.sendto(message.encode("UTF-8"), (ip, port))
-            break
-
+except KeyboardInterrupt:
+    print("KeyboardInterrupt: Exiting gracefully...")
+    message = "exit"
+    client_socket.sendto(message.encode("UTF-8"), (ip, port))  #
+finally:
+    f.close()
     client_socket.close()
     print("END CONNECTION")

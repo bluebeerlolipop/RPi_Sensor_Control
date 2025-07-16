@@ -1,7 +1,6 @@
 import smbus2
 import time
 import struct
-import keyboard
 
 BNO055_ADDRESS = 0x28  # or 0x29
 
@@ -67,9 +66,10 @@ try:
         print("-" * 50)
         time.sleep(0.06)
 
-        if keyboard.is_pressed('q'):
-            print("Exiting...")
-            break
+except KeyboardInterrupt:
+    print("KeyboardInterrupt: Exiting gracefully...")
 
 finally:
     f.close()
+    client_socket.close()
+    print("END CONNECTION")
