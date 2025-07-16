@@ -102,7 +102,7 @@ try:
             if message == "exit":
                 print("EXIT DEPLOYED. CLIENT SHUTDOWN")
                 break
-        except socket.timemout:
+        except socket.timeout:
             pass
 finally:
     f.close()
