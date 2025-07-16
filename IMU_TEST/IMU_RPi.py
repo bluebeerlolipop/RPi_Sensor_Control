@@ -62,6 +62,7 @@ wait_for_full_calibration()
 
 f = open("imu_data_log.txt", "w")
 f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
+time = time.time()
 
 try:
     while True:
@@ -73,9 +74,8 @@ try:
         gravity = [x/100.0 for x in read_vector(0x2E)] # m/s^2
         quat  = read_quaternion()
         
-        time = time.time()
         line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
-                time.time():.4f - time,
+                time.time() - time,
                 *accel, *mag, *gyro, *euler, *lin_acc, *gravity, *quat
             )
         
