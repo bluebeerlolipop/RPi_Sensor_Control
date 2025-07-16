@@ -4,7 +4,7 @@ import struct
 import socket
 import keyboard
 
-ip = '192.168.137.162' # server의 ip를 입력해야함. client에 할당된 ip를 적으면 안됨.
+ip = '192.168.137.1' # server의 ip를 입력해야함. client에 할당된 ip를 적으면 안됨.
 port = 22 # port번호는 수정 가능
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -65,40 +65,40 @@ with open("imu_data_log.txt", "w") as f:
     f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
 
 
-while True:
-    accel = [x/100.0 for x in read_vector(0x08)]  # m/s^2
-    mag   = [x/16.0 for x in read_vector(0x0E)]   # uT
-    gyro  = [x/16.0 for x in read_vector(0x14)]   # deg/s
-    euler = [x/16.0 for x in read_vector(0x1A)]   # degrees
-    lin_acc = [x/100.0 for x in read_vector(0x28)] # m/s^2
-    gravity = [x/100.0 for x in read_vector(0x2E)] # m/s^2
-    quat  = read_quaternion()
+    while True:
+        accel = [x/100.0 for x in read_vector(0x08)]  # m/s^2
+        mag   = [x/16.0 for x in read_vector(0x0E)]   # uT
+        gyro  = [x/16.0 for x in read_vector(0x14)]   # deg/s
+        euler = [x/16.0 for x in read_vector(0x1A)]   # degrees
+        lin_acc = [x/100.0 for x in read_vector(0x28)] # m/s^2
+        gravity = [x/100.0 for x in read_vector(0x2E)] # m/s^2
+        quat  = read_quaternion()
 
-    line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
-            time.time(),
-            *accel, *mag, *gyro, *euler, *lin_acc, *gravity, *quat
-        )
-    
-    client_socket.sendto(line.encode("UTF-8"), (ip, port)) # line을 UDP로 전송
+        line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                time.time(),
+                *accel, *mag, *gyro, *euler, *lin_acc, *gravity, *quat
+            )
+        
+        client_socket.sendto(line.encode("UTF-8"), (ip, port)) # line을 UDP로 전송
 
-    f.write(line)
-    f.flush()  # 즉시 디스크에 기록
+        f.write(line)
+        f.flush()  # 즉시 디스크에 기록
 
-    print(f"Accel     : {accel} m/s^2")
-    print(f"Magnet    : {mag} uT")
-    print(f"Gyro      : {gyro} deg/s")
-    print(f"Euler     : {euler} deg")
-    print(f"LinearAcc : {lin_acc} m/s^2")
-    print(f"Gravity   : {gravity} m/s^2")
-    print(f"Quaternion: {quat}")
-    print("-" * 50)
-    time.sleep(0.06)
+        print(f"Accel     : {accel} m/s^2")
+        print(f"Magnet    : {mag} uT")
+        print(f"Gyro      : {gyro} deg/s")
+        print(f"Euler     : {euler} deg")
+        print(f"LinearAcc : {lin_acc} m/s^2")
+        print(f"Gravity   : {gravity} m/s^2")
+        print(f"Quaternion: {quat}")
+        print("-" * 50)
+        time.sleep(0.06)
 
-    if keyboard.is_pressed("q"):
-        print("종료합니다...")
-        message = "exit"
-        client_socket.sendto(message.encode("UTF-8"), (ip, port))
-        break
+        if keyboard.is_pressed("q"):
+            print("종료합니다...")
+            message = "exit"
+            client_socket.sendto(message.encode("UTF-8"), (ip, port))
+            break
 
-client_socket.close()
-print("END CONNECTION")
+    client_socket.close()
+    print("END CONNECTION")
