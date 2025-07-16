@@ -1,7 +1,7 @@
 import socket
 import time
 
-ip ='192.168.137.1'
+ip ='192.168.137.1' # server의 ip를 입력
 port = 22
 
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
@@ -15,11 +15,10 @@ try:
         data, address = server_socket.recvfrom(1024)
         message = data.decode("UTF-8")
 
-        if message == "exit":
+        if message == "exit": # 클라이언트에서 exit 메시지 보내면 서버 종료하는 코드
             print("EXIT DEPLOYED. SERVER SHUTDOWN")
             break
 
-        #message = data.decode("UTF-8")
         message = message.strip()
         message = message.split(',')
 
@@ -43,9 +42,9 @@ try:
 except KeyboardInterrupt:
     print("KeyboardInterrupt: Exiting gracefully...")
     message = "exit"
-    for i in range(100):
-        server_socket.sendto(message.encode("UTF-8"), (ip, port))
-        time.sleep(0.1)
+    for i in range(200):
+        server_socket.sendto(message.encode("UTF-8"), address)
+        time.sleep(0.05)
 
 finally:
     server_socket.close()
