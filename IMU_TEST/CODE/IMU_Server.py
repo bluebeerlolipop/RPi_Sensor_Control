@@ -1,7 +1,7 @@
 import socket
 import time
 
-ip ='192.168.1.174' # server의 ip를 입력
+ip ='192.168.137.1' # server의 ip를 입력
 port = 22
 
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
