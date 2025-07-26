@@ -6,7 +6,7 @@ import socket
 ip = '192.168.1.174' # server의 ip를 입력해야함. client에 할당된 ip를 적으면 안됨.
 port = 22 # port번호는 수정 가능
 
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 BNO055_ADDRESS = 0x28  # or 0x29
 
@@ -60,7 +60,7 @@ def wait_for_full_calibration():
 init_bno055()
 wait_for_full_calibration()
 
-f = open("imu_data_log_Client.txt", "w")
+f = open("imu_data_log.txt", "w")
 f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
 start_time = time.time()
 
@@ -75,19 +75,17 @@ try:
         lin_acc = [x/100.0 for x in read_vector(0x28)] # m/s^2
         gravity = [x/100.0 for x in read_vector(0x2E)] # m/s^2
         quat  = read_quaternion()
-        data_number = 1
         
-        line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
-                data_number, time.time() - start_time,
+        line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
+                time.time() - start_time,
                 *accel, *mag, *gyro, *euler, *lin_acc, *gravity, *quat
             )
         
         client_socket.sendto(line.encode("UTF-8"), (ip, port)) # line을 UDP로 전송
 
         f.write(line)
-        f.flush() # 즉시 디스크에 기록
-        
-        print(f"DataNumber: {data_number}")
+        f.flush()  # 즉시 디스크에 기록
+
         print(f"Accel     : {accel} m/s^2")
         print(f"Magnet    : {mag} uT")
         print(f"Gyro      : {gyro} deg/s")
@@ -97,7 +95,6 @@ try:
         print(f"Quaternion: {quat}")
         print("-" * 50)
         time.sleep(0.04)
-        data_number = data_number + 1
         
         client_socket.settimeout(0.02)
         try:
