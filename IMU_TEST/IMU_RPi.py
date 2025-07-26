@@ -6,7 +6,7 @@ import socket
 ip = '192.168.1.174' # server의 ip를 입력해야함. client에 할당된 ip를 적으면 안됨.
 port = 22 # port번호는 수정 가능
 
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 BNO055_ADDRESS = 0x28  # or 0x29
 
@@ -65,7 +65,7 @@ f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,
 start_time = time.time()
 
 #client_socket.settimeout(0.02)  # 타임아웃 설정
-
+data_number = 1
 try:
     while True:
         accel = [x/100.0 for x in read_vector(0x08)]  # m/s^2
@@ -75,7 +75,6 @@ try:
         lin_acc = [x/100.0 for x in read_vector(0x28)] # m/s^2
         gravity = [x/100.0 for x in read_vector(0x2E)] # m/s^2
         quat  = read_quaternion()
-        data_number = 1
         
         line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
                 data_number, time.time() - start_time,

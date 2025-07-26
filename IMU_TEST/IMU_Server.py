@@ -1,21 +1,21 @@
 import socket
 import time
 
-ip ='192.168.1.174' # server의 ip를 입력
+ip ='192.168.137.1' # server의 ip를 입력
 port = 22
 
-server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+server_socket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM )
 server_socket.bind((ip,port))
 print('WAITING FOR CLIENT...')
-data, address = server_socket.recvfrom(1024)
+data, address = server_socket.recvfrom(1024) # 클라이언트로부터 데이터 수신
 print("CLIENT ip address: ", address[0])
 
 f = open("imu_data_log_Server.txt", "w")
-f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
+f.write("number,time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
 
 try:
     while True:
-        data, address = server_socket.recvfrom(1024)
+        data, address = data.recv(1024)
         message = data.decode("UTF-8")
 
         if message == "exit": # 클라이언트에서 exit 메시지 보내면 서버 종료하는 코드
