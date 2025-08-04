@@ -21,6 +21,7 @@ class IMUClient:
         self.log_filename = log_filename
         self.log_file = open(self.log_filename, "w", encoding="utf-8")
         self.index = 0
+        self.CON_LOST = True
 
         headers = [
             "Index", "Time",
@@ -50,7 +51,13 @@ class IMUClient:
                         data["quat"]
                     ] for v in group
                 )
-                self.client_socket.sendto(line.encode(), self.addr)
+                try:
+                    self.client_socket.sendto(line.encode(), self.addr)
+                except Exception as e:
+                    if self.CON_LOST:
+                        self.index = 0
+                        self.CON_LOST = False
+                    print(f"⚠️ 데이터 전송 실패: {e}")
 
                 # 로컬 로그 저장 (6자리 정밀도 유지)
                 log_line = "{},{:.3f},".format(self.index, t) + ",".join(
