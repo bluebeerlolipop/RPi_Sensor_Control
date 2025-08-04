@@ -2,13 +2,14 @@ import socket
 import time
 import threading
 from collections import deque
+import numpy as np
 
 # 평균 필터 함수
 def compute_moving_average(queue):
     return sum(queue) / len(queue) if queue else 0.0
 
 class IMUServer:
-    def __init__(self, ip='10.96.215.26', port=5005):
+    def __init__(self, ip='192.168.137.1', port=22):
         self.ip = ip
         self.port = port
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -226,6 +227,34 @@ class IMUServer:
     def close(self):
         self.server_socket.close()
         print("🔧 서버 시작 종료")
+
+class Servo:
+    def __init__(self, servo_pin=18):
+        self.servo_pin = servo_pin
+        self.pwm = None
+        self.sensor = None
+        self.q_filter = QuaternionFilter(maxlen=2)
+        self.last_angle = None
+        self.servo_activated = False
+        self.armed_for_deploy = False
+
+    def init_servo(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.servo_pin, GPIO.OUT)
+        self.pwm = GPIO.PWM(self.servo_pin, 50)
+        self.pwm.start(0)
+
+    def rotate_servo(self, angle, delay=0.5):
+        duty = 2.5 + (angle / 180.0) * 10
+        self.pwm.ChangeDutyCycle(duty)
+        time.sleep(delay)
+        self.pwm.ChangeDutyCycle(0)
+
+    def cleanup_servo(self):
+        if self.pwm:
+            self.pwm.stop()
+        GPIO.cleanup()
+
 
 if __name__ == "__main__":
     server = IMUServer()
