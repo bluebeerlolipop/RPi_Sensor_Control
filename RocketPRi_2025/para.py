@@ -10,7 +10,7 @@ SERVO_PIN = 18  # GPIO18 (물리 12번 핀)
 FAIL_SIGNAL_IP = "127.0.0.1"  # 로컬 테스트용 IP
 FAIL_SIGNAL_PORT = 6006 # raspi.py와 동일한 포트
 START_LISTEN_PORT = 5006 # server.py(para port)와 동일한 포트
-SERVER_IP   = "10.14.170.26"   # server.py가 바인드한 IP
+SERVER_IP   = "192.168.137.1"   # server.py가 바인드한 IP
 SERVER_PORT = 5005
 
 

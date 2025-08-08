@@ -143,6 +143,8 @@ class IMUClient:
         self.Con_Lost = True
         self.running = True # 루프 종료 플래그
         self.start_event = start_event
+        self.target_port = None
+
 
         self.client_socket.bind(("", stport))
 
@@ -171,10 +173,11 @@ class IMUClient:
         self.running = False # run() 루프 탈출
         self.log_file.flush()
         self.log_file.close()
-        self.send_log_file()
+        self.send_log_file(override_port = 5010)
     
-    def send_log_file(self):
+    def send_log_file(self, override_port=None):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.target_port = override_port if override_port else self.addr[1]
         try:
             with open(self.log_filename, "r", encoding="utf-8") as f:
                 for line in f:
@@ -250,7 +253,6 @@ class IMUClient:
             self.close()
 
     def close(self):
-        self.client_socket.close()
         self.log_file.close()
         print("END CONNECTION")
 
@@ -258,7 +260,7 @@ class IMUClient:
 if __name__ == "__main__":
     start_event = threading.Event()
     
-    client = IMUClient(ip="10.14.170.26", port=5005, stport=5004, print_raw=False, start_event = start_event) # 192.168.137.1, port=22
+    client = IMUClient(ip="192.168.137.1", port=5005, stport=5004, print_raw=False, start_event = start_event) # 192.168.137.1, port=22
     
     listener = threading.Thread(target=listen_for_fail_signal, args=(client.stop_and_send,))
     listener.daemon = True
