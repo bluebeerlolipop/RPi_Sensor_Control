@@ -1,4 +1,0 @@
-IMU_RPiv2 : 센서에서 값 받아옴 + 필터링
-IMU_Quat : IMU_RPiv2에서 import로 값을 실시간 입력받음 + 낙하산 사출 조건 판단
-IMU_Serv2 : 통신으로 값을 받음(서버) + 필터링
-Ser_para : IMU_Serv2에서의 txt 파일 값을 읽음 + 낙하산 사출 조건 만족 여부 + 낙하산 사출 여부 판단(가속도)
