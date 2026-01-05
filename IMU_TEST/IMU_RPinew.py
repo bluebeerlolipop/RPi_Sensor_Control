@@ -24,12 +24,12 @@ class BNO055:
         return sys, gyro, accel, mag
 
     def wait_for_full_calibration(self):
-        print("🔄 센서 보정 중...")
+        print("calibrate sensor")
         while True:
             sys, gyro, accel, mag = self.read_calibration_status()
             print(f"Calibration → Sys:{sys}, Gyro:{gyro}, Accel:{accel}, Mag:{mag}", end="\r")
             if sys == 3 and gyro == 3 and accel == 3 and mag == 3:
-                print("\n✅ 센서 보정 완료!")
+                print("\n calibrate complete")
                 break
             time.sleep(0.5)
 
