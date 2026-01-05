@@ -53,10 +53,10 @@ class IMUServer:
 
 
     def wait_for_client(self):
-        print("⏳ 클라이언트 접속 대기 중...")
+        print("waiting for client")
         _ , address = self.server_socket.recvfrom(1024) # (data, address) 중 [1] 값 할당
         self.client_address = address
-        print("✅ 클라이언트 접속됨:", address[0])
+        print("client detected:", address[0])
 
     def parse_message(self, message):
         try:
@@ -90,7 +90,7 @@ class IMUServer:
                 "temp": temp
             }
         except Exception as e:
-            print("❗ 메시지 파싱 오류:", e)
+            print("Message error:", e)
             return None
 
     def store_to_queues(self, data):
@@ -186,7 +186,7 @@ class IMUServer:
                 with open("filtered_data.txt", "a", encoding="utf-8") as f:
                     f.write(log)   
             else:
-                print("데이터 대기 중...")
+                print("waiting for data")
             time.sleep(0.06)
 
     def send_exit_signal(self):
@@ -204,7 +204,7 @@ class IMUServer:
                 message = data.decode("UTF-8")
 
                 if message == "exit":
-                    print("🚪 클라이언트 종료 요청 수신. 서버 종료 중...")
+                    print("client exit signal detected. Closing the server.")
                     break
 
                 parsed = self.parse_message(message)
@@ -212,14 +212,14 @@ class IMUServer:
                     self.store_to_queues(parsed)  # 큐에 데이터 저장
         
         except KeyboardInterrupt:
-            print("\n🛑 키보드 인터럽트: 서버 종료 중...")
+            print("\n keyboard interrrupt detected: Closing the server.")
             self.send_exit_signal()
         finally:
             self.close()
 
     def close(self):
         self.server_socket.close()
-        print("🧯 서버 소켓 닫힘. 종료 완료.")
+        print("Server socket is closed. Server closed.")
 
 # 실행 코드
 if __name__ == "__main__":
