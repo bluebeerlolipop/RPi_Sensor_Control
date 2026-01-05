@@ -48,12 +48,12 @@ def init_bno055():
     time.sleep(0.02)
 
 def wait_for_full_calibration():
-    print("🔄 센서 보정 중...")
+    print("calibrate sensor")
     while True:
         sys, gyro, accel, mag = read_calibration_status()
         print(f"Calibration → Sys:{sys}, Gyro:{gyro}, Accel:{accel}, Mag:{mag}", end='\r')
         if sys == 3 and gyro == 3 and accel == 3 and mag == 3:
-            print("\n✅ 센서 보정 완료!")
+            print("\n calibrate complete")
             break
         time.sleep(0.5)
 
@@ -64,7 +64,7 @@ f = open("imu_data_log_Client.txt", "w")
 f.write("time,ax,ay,az,mx,my,mz,gx,gy,gz,ex,ey,ez,lax,lay,laz,gvx,gvy,gvz,q0,q1,q2,q3\n")
 start_time = time.time()
 
-#client_socket.settimeout(0.02)  # 타임아웃 설정
+#client_socket.settimeout(0.02)
 data_number = 1
 try:
     while True:
@@ -84,7 +84,7 @@ try:
         client_socket.sendto(line.encode("UTF-8"), (ip, port)) # line을 UDP로 전송
 
         f.write(line)
-        f.flush() # 즉시 디스크에 기록
+        f.flush() # 디스크에 기록
         
         print(f"DataNumber: {data_number}")
         print(f"Accel     : {accel} m/s^2")
